@@ -33,6 +33,16 @@ pipeline {
             }
         }
 
+        stage('Deploy Image') {
+            steps {
+                script {
+                    withDockerRegistry([ credentialsId: "docker-hub", url: "" ]) {
+                    sh 'docker push goldin2008/devops-capstone'
+                    }
+                }
+            }
+        }
+
         // stage('Set K8S Context'){
         //     steps {
         //         withAWS(credentials:'aws-credentials'){

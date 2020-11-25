@@ -1,8 +1,8 @@
 # Tag image
-docker tag flask-app:latest mahaamin97/flask-app:latest
+docker tag flask-app:latest goldin2008/flask-app:latest
 
 # Login to docker-hub
-docker login --username=mahaamin97
+docker login --username=goldin2008
 
 # Push image
-docker push mahaamin97/flask-app:latest
+docker push goldin2008/flask-app:latest

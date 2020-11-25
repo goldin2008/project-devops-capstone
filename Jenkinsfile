@@ -19,11 +19,11 @@ pipeline {
             }
         }
         
-        stage ('Cloning Git') {
-            steps {
-                git clone 'https://github.com/goldin2008/project-devops-capstone.git'
-            }
-        }
+        // stage ('Cloning Git') {
+        //     steps {
+        //         git 'https://github.com/goldin2008/project-devops-capstone.git'
+        //     }
+        // }
 
         stage('Building image') {
             steps {

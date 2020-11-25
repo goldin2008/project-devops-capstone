@@ -18,30 +18,51 @@ pipeline {
                 sh "bash ./run_pylint.sh"
             }
         }
-        
+
+        stage('Lint HTML') {
+              steps {
+                  sh 'tidy -q -e *.html'
+              }
+         }
+
+         stage('Build Docker Image') {
+              steps {
+                  sh 'docker build -t udacity-devops-capstone .'
+              }
+         }
+
+         stage('Push Docker Image') {
+              steps {
+                  withDockerRegistry([url: "", credentialsId: "goldin2008"]) {
+                      sh "docker tag udacity-devops-capstone goldin2008/udacity-devops-capstone"
+                      sh 'docker push goldin2008/udacity-devops-capstone'
+                  }
+              }
+         }
+
         // stage ('Cloning Git') {
         //     steps {
         //         git 'https://github.com/goldin2008/project-devops-capstone.git'
         //     }
         // }
 
-        stage('Build Image') {
-            steps {
-                script {
-                    sh 'docker build --tag=goldin2008/devops-capstone .'
-                }
-            }
-        }
+        // stage('Build Image') {
+        //     steps {
+        //         script {
+        //             sh 'docker build --tag=goldin2008/devops-capstone .'
+        //         }
+        //     }
+        // }
 
-        stage('Deploy Image') {
-            steps {
-                script {
-                    withDockerRegistry([ credentialsId: "docker-hub"]) {
-                    sh 'docker push goldin2008/devops-capstone'
-                    }
-                }
-            }
-        }
+        // stage('Deploy Image') {
+        //     steps {
+        //         script {
+        //             withDockerRegistry([ credentialsId: "docker-hub"]) {
+        //             sh 'docker push goldin2008/devops-capstone'
+        //             }
+        //         }
+        //     }
+        // }
 
         // stage('Set K8S Context'){
         //     steps {

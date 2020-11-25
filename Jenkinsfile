@@ -18,6 +18,20 @@ pipeline {
                 sh "bash ./run_pylint.sh"
             }
         }
+        
+        stage ('Cloning Git') {
+            steps {
+                git 'https://github.com/goldin2008/project-devops-capstone.git'
+            }
+        }
+
+        stage('Building image') {
+            steps {
+                script {
+                    sh 'docker build --tag=goldin2008/devops-capstone .'
+                }
+            }
+        }
 
         // stage('Set K8S Context'){
         //     steps {

@@ -25,7 +25,7 @@ pipeline {
         //     }
         // }
 
-        stage('Building image') {
+        stage('Build Image') {
             steps {
                 script {
                     sh 'docker build --tag=goldin2008/devops-capstone .'
@@ -36,7 +36,7 @@ pipeline {
         stage('Deploy Image') {
             steps {
                 script {
-                    withDockerRegistry([ credentialsId: "docker-hub", url: "" ]) {
+                    withDockerRegistry([ credentialsId: "docker-hub"]) {
                     sh 'docker push goldin2008/devops-capstone'
                     }
                 }

@@ -1,5 +1,6 @@
 pipeline {
     environment{
+        registry = "goldin2008/devops-capstone"
         registryCredential = 'docker-hub' 
         greenDockerImage = '' 
         blueDockerImage = ''
@@ -29,7 +30,7 @@ pipeline {
         stage('Build Green Docker Image') {
             steps {
                 script{
-                    greenDockerImage = docker.build "mahaamin97/pre-production-flask-app"
+                    greenDockerImage = docker.build "goldin2008/pre-production-flask-app"
                 }
             }
         }
@@ -46,7 +47,7 @@ pipeline {
 
         stage('Clean Up Green Image'){
             steps { 
-                sh "docker rmi mahaamin97/pre-production-flask-app:latest" 
+                sh "docker rmi goldin2008/pre-production-flask-app:latest" 
             }
         }
 
@@ -75,7 +76,7 @@ pipeline {
         stage('Build Blue Docker Image') {
             steps {
                 script{
-                    blueDockerImage = docker.build "mahaamin97/flask-app"
+                    blueDockerImage = docker.build "goldin2008/flask-app"
                 }
             }
         }
@@ -92,7 +93,7 @@ pipeline {
 
         stage('Clean Up Blue Image'){
             steps { 
-                sh "docker rmi mahaamin97/flask-app:latest" 
+                sh "docker rmi goldin2008/flask-app:latest" 
             }
         }
 

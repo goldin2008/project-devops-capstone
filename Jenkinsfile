@@ -19,17 +19,11 @@ pipeline {
             }
         }
 
-        // stage('Lint HTML') {
-        //       steps {
-        //           sh 'tidy -q -e *.html'
-        //       }
-        //  }
-
-         stage('Build Docker Image') {
-              steps {
-                  sh 'docker build -t udacity-devops-capstone .'
-              }
-         }
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t udacity-devops-capstone .'
+            }
+        }
 
          stage('Push Docker Image') {
               steps {
@@ -40,114 +34,46 @@ pipeline {
               }
          }
 
-        // stage ('Cloning Git') {
-        //     steps {
-        //         git 'https://github.com/goldin2008/project-devops-capstone.git'
-        //     }
-        // }
+        stage('Build Green Docker Image') {
+            steps {
+                script{
+                    greenDockerImage = docker.build "goldin2008/green-flask-app"
+                }
+            }
+        }
 
-        // stage('Build Image') {
-        //     steps {
-        //         script {
-        //             sh 'docker build --tag=goldin2008/devops-capstone .'
-        //         }
-        //     }
-        // }
+        stage('Upload Green Image'){
+            steps{
+                script{
+                    docker.withRegistry('', registryCredential){
+                        greenDockerImage.push()
+                    }
+                }
+            }
+        }
 
-        // stage('Deploy Image') {
-        //     steps {
-        //         script {
-        //             withDockerRegistry([ credentialsId: "docker-hub"]) {
-        //             sh 'docker push goldin2008/devops-capstone'
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Clean Up Green Image'){
+            steps { 
+                sh "docker rmi goldin2008/green-flask-app:latest" 
+            }
+        }
 
-        // stage('Set K8S Context'){
-        //     steps {
-        //         withAWS(credentials:'aws-credentials'){
-        //             sh "kubectl config set-context arn:aws:eks:us-east-2:319947095944:cluster/production"
-        //         }
-        //     }
-        // }
+        stage('Build Blue Docker Image') {
+            steps {
+                script{
+                    blueDockerImage = docker.build "goldin2008/blue-flask-app"
+                }
+            }
+        }
 
-        // stage('Build Green Docker Image') {
-        //     steps {
-        //         script{
-        //             greenDockerImage = docker.build "goldin2008/pre-production-flask-app"
-        //         }
-        //     }
-        // }
-
-        // stage('Upload Green Image to Docker-Hub'){
-        //     steps{
-        //         script{
-        //             docker.withRegistry('', registryCredential){
-        //                 greenDockerImage.push()
-        //             }
-        //         }
-        //     }
-        // }
-
-        // stage('Clean Up Green Image'){
-        //     steps { 
-        //         sh "docker rmi goldin2008/pre-production-flask-app:latest" 
-        //     }
-        // }
-
-        // stage('Green Deployment'){
-        //     steps {
-        //         withAWS(credentials:'aws-credentials'){
-        //             sh "kubectl apply -f k8s/Green/green-deployment.yaml && kubectl apply -f k8s/Green/test-service.yaml"
-        //         }
-        //     }
-        // }
-
-        // stage('Test Green Deployment'){
-        //     steps{
-        //         input "Deploy to production?"
-        //     }
-        // }
-
-        // stage('Switch Traffic To Green Deployment'){
-        //     steps{
-        //         withAWS(credentials:'aws-credentials'){
-        //             sh "kubectl apply -f k8s/Green/green-service.yaml"
-        //         }
-        //     }
-        // }
-
-        // stage('Build Blue Docker Image') {
-        //     steps {
-        //         script{
-        //             blueDockerImage = docker.build "goldin2008/flask-app"
-        //         }
-        //     }
-        // }
-
-        // stage('Upload Blue Image to Docker-Hub'){
-        //     steps{
-        //         script{
-        //             docker.withRegistry('', registryCredential){
-        //                 blueDockerImage.push()
-        //             }
-        //         }
-        //     }
-        // }
-
-        // stage('Clean Up Blue Image'){
-        //     steps { 
-        //         sh "docker rmi goldin2008/flask-app:latest" 
-        //     }
-        // }
-
-        // stage('Blue Deployment'){
-        //     steps {
-        //         withAWS(credentials:'aws-credentials'){
-        //             sh "kubectl apply -f k8s/Blue"
-        //         }
-        //     }
-        // }
+        stage('Upload Blue Image'){
+            steps{
+                script{
+                    docker.withRegistry('', registryCredential){
+                        blueDockerImage.push()
+                    }
+                }
+            }
+        }
     }
 }

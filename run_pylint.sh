@@ -1,6 +1,6 @@
 #!/bin/bash
-python3 -m venv ~/.udacity_capstone
-source ~/.udacity_capstone/bin/activate
+python3 -m venv ~/uda
+source ~/uda/bin/activate
 pip install --upgrade pip &&\
   pip install -r requirements.txt
 
